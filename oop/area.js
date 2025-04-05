@@ -99,6 +99,6 @@ class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-
         
         const buttonFormSim = document.createElement('button'); // létrehozunk egy gombot
         buttonFormSim.textContent = 'hozzáadás'; // a gomb szövege az lesz hogy "hozzáadás"
-        formSim.appendChild(buttonFormSim); // hozzácsapjuk a formhoz
+        form.appendChild(buttonFormSim); // hozzácsapjuk a formhoz
     }
 }
