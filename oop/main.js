@@ -1,8 +1,6 @@
 const separator = document.createElement('hr'); // hogy a html-en egyszeruen megtalalhato legyen az elvalaszto oop es sima kozott
 document.body.appendChild(separator); // hozzáadjk a bodyhoz az elválasztó vonalat
 
-const table = new Table('table'); // példányosítjuk a Table osztályt, 'table' class-szal
-
 const fieldsList = [{ // egy tömb objektumokkal, minden mezőről infó
     fieldid: 'forradalom', // ez lesz az input id-ja
     fieldLabel: 'forradalom' // ezt a szöveget látjuk a label-ben
@@ -16,5 +14,7 @@ const fieldsList = [{ // egy tömb objektumokkal, minden mezőről infó
     fieldLabel: 'sikeres' // harmadik mező felirat
 }];
 
-const form = new Form('form', fieldsList); // példányosítjuk a Form osztályt, 'form' class-szal
-//legalul kell lenni így hogy listet adunk at!
+const manager = new Manager(); // manager példányosítása
+const table = new Table('table', manager); // példányosítjuk a Table osztályt, 'table' class-szal, managert is megadjuk neki
+const form = new Form('form', fieldsList, manager); // példányosítjuk a Form osztályt, 'form' class-szal, és egy listaval, és a managerrel
+// legalul kell lennie így hogy listet adunk at!

@@ -1,18 +1,25 @@
 class Area {//létrehozunk egy osztályt
     #div;// privét változó, osztályon belül látható csak
 
+    #manager;// privat változó, osztályon belül látható csak
+
+    get manager(){ // getter metódus hogy el lehessen érni a privát managert-et
+        return this.#manager; // visszaadja a #manager értékét
+    }
+
     get div(){// getter metódus hogy el lehessen érni a privát div-et
         return this.#div;// visszaadja a #div értékét
     }
 
-    constructor(className) { // konstruktor, kap egy class nevet
+    constructor(className, manager) { // konstruktor, kap egy class nevet és egy managert
+        this.#manager = manager; // beállítjuk a privát #manager változót a kapott értékre
         const container = this.#getContainerDiv(); // itt hívjuk meg a privát metódust amit egy változóban tárolunk el
         this.#div = document.createElement('div'); // létrehoz egy új divet a kapott class-hoz
         this.#div.className = className; // beállítja a class nevet amit paraméterként kapott
         container.appendChild(this.#div); // berakja az új divet a containeroop divbe
     }
 
-    #getContainerDiv(){
+    #getContainerDiv(){ // privát metódus
         let containerDiv = document.querySelector('.containeroop'); // megnézi van-e már ilyen nevű container
         if (!containerDiv) { // ha nincs ilyen, akkor csinál egyet
             containerDiv = document.createElement('div'); // létrehoz egy új divet
@@ -24,12 +31,29 @@ class Area {//létrehozunk egy osztályt
 }
 
 class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Area ősosztályból öröklődik
-    constructor(cssClass){ // konstruktor, kap egy cssclass nevet
-        super(cssClass); // meghívjuk az Area osztály konstruktorát vele
-        const tabla =this.#makeTable(); // privat metodus hivas amit egy valtozoban tarolunk el
+    constructor(cssClass, manager){ // konstruktor, kap egy cssclass nevet
+        super(cssClass, manager); // meghívjuk az Area osztály konstruktorát vele
+        const tabla = this.#makeTable(); // privat metodus hivas amit egy valtozoban tarolunk el
+        
+        this.manager.setAddAdatCallback((adatok) => { // arrow function 
+            const tbRow = document.createElement('tr'); // csinálunk egy új sort a táblába
+            tabla.appendChild(tbRow); // belerakjuk a tbody-be amivel a #makeTable metodus tér vissza
+        
+            const forradalomCell = document.createElement('td'); // forradalom nak létrehozunk egy cellát
+            forradalomCell.textContent = adatok.forradalom; // cella szövegébe a forradalom
+            tbRow.appendChild(forradalomCell); // hozzáadjuk a sorhoz
+        
+            const evszamCell = document.createElement('td'); // évhez cella
+            evszamCell.textContent = adatok.evszam; // kiírjuk a beírt évet
+            tbRow.appendChild(evszamCell); // hozzáadjuk a sorhoz
+            
+            const sikeresECell = document.createElement('td'); // sikeres-e cella létrehozása
+            sikeresECell.textContent = adatok.sikeres; // szövegbe az igen vagy nem
+            tbRow.appendChild(sikeresECell); // hozzáadjuk a sorhoz
+        })
     }
 
-    #makeTable(){
+    #makeTable(){ // privat metódus ami a fejlecet és a tbody-t hozza létre
         const table = document.createElement('table'); // csinálunk egy table elemet
         this.div.appendChild(table); // hozzáadjuk a divhez amit az Area hozott létre
 
@@ -53,8 +77,8 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
 }
 
 class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-ból öröklődik
-    constructor(cssClass, fieldsList){ // konstruktor, megkapja a cssclass nevet
-        super(cssClass); // meghívjuk az ős (Area) konstruktorát
+    constructor(cssClass, fieldsList, manager){ // konstruktor, megkapja a cssclass nevet
+        super(cssClass, manager); // meghívjuk az ős (Area) konstruktorát
         const form = document.createElement('form'); // csinálunk egy form html elemet
         this.div.appendChild(form); // belerakjuk a formot az Area által létrehozott div-be
         
@@ -94,5 +118,19 @@ class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-
         const buttonFormSim = document.createElement('button'); // létrehozunk egy gombot
         buttonFormSim.textContent = 'hozzáadás'; // a gomb szövege az lesz hogy "hozzáadás"
         form.appendChild(buttonFormSim); // hozzácsapjuk a formhoz
+
+        form.addEventListener('submit', (e)=> { // amikor a formot elküldik (submit), akkor ez lefut
+            e.preventDefault(); // megakadályozzuk hogy az oldal újratöltődjön
+            const valueObject = {}; // ebbe az objektumba fogjuk gyűjteni a mezők értékeit
+        
+            const inputFields = e.target.querySelectorAll('input, select'); // lekérjük az összes input és select mezőt a formból
+            for(const inputField of inputFields){ // végigmegyünk az inputokon
+                valueObject[inputField.id] = inputField.value; // kulcsnak az input id, értéknek a beírt dolog
+            }
+            
+            const adat = new Adat(valueObject.forradalom, valueObject.evszam, valueObject.sikeres); // a form mezőkből létrehozunk egy új Adat példányt a megadott forradalom, évszám és sikeresség adatokkal
+
+            this.manager.addAdat(adat); // hozzáadjuk az objektumot egy tömbhöz (feltételezzük hogy az array már létezik)
+        })
     }
 }
