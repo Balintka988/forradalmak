@@ -6,22 +6,30 @@ class Area {//létrehozunk egy osztályt
     }
 
     constructor(className) { // konstruktor, kap egy class nevet
+        const container = this.#getContainerDiv(); // itt hívjuk meg a privát metódust amit egy változóban tárolunk el
+        this.#div = document.createElement('div'); // létrehoz egy új divet a kapott class-hoz
+        this.#div.className = className; // beállítja a class nevet amit paraméterként kapott
+        container.appendChild(this.#div); // berakja az új divet a containeroop divbe
+    }
+
+    #getContainerDiv(){
         let containerDiv = document.querySelector('.containeroop'); // megnézi van-e már ilyen nevű container
         if (!containerDiv) { // ha nincs ilyen, akkor csinál egyet
             containerDiv = document.createElement('div'); // létrehoz egy új divet
             containerDiv.className = 'containeroop'; // beállítja a class nevét
             document.body.appendChild(containerDiv); // hozzáadja a bodyhoz
         }
-        this.#div = document.createElement('div'); // létrehoz egy új divet a kapott class-hoz
-        this.#div.className = className; // beállítja a class nevet amit paraméterként kapott
-        containerDiv.appendChild(this.#div); // berakja az új divet a containeroop divbe
+        return containerDiv; // containerDivvel térünk vissza
     }
 }
 
 class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Area ősosztályból öröklődik
     constructor(cssClass){ // konstruktor, kap egy cssclass nevet
         super(cssClass); // meghívjuk az Area osztály konstruktorát vele
-        
+        const tabla =this.#makeTable(); // privat metodus hivas amit egy valtozoban tarolunk el
+    }
+
+    #makeTable(){
         const table = document.createElement('table'); // csinálunk egy table elemet
         this.div.appendChild(table); // hozzáadjuk a divhez amit az Area hozott létre
 
@@ -40,29 +48,17 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
         
         const tbody = document.createElement('tbody'); // csinálunk egy üres tbody részt is
         table.appendChild(tbody); // hozzáadjuk a table-hez
+        return tbody; // visszatér a tbodyval
     }
 }
 
 class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-ból öröklődik
-    constructor(cssClass){ // konstruktor, megkapja a cssclass nevet
+    constructor(cssClass, fieldsList){ // konstruktor, megkapja a cssclass nevet
         super(cssClass); // meghívjuk az ős (Area) konstruktorát
         const form = document.createElement('form'); // csinálunk egy form html elemet
         this.div.appendChild(form); // belerakjuk a formot az Area által létrehozott div-be
-
-        const fieldElementList = [{ // egy tömb objektumokkal, minden mezőről infó
-            fieldid: 'forradalom', // ez lesz az input id-ja
-            fieldLabel: 'forradalom' // ezt a szöveget látjuk a label-ben
-        },
-        {
-            fieldid: 'evszam', // második mező id
-            fieldLabel: 'evszám' // második mező felirat
-        },
-        {
-            fieldid: 'sikeres', // harmadik mező id
-            fieldLabel: 'sikeres' // harmadik mező felirat
-        }];
         
-        for(const fieldElement of fieldElementList){ // végigmegyünk az összes mező objektumon
+        for(const fieldElement of fieldsList){ // végigmegyünk az összes mező objektumon
             const field = makeDiv('field'); // csinálunk egy divet "field" class-szal
             form.appendChild(field); // hozzáadjuk a formhoz
         
