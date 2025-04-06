@@ -70,11 +70,9 @@ class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-
             label.htmlFor = fieldElement.fieldid; // beállítjuk hogy melyik inputhoz tartozik
             label.textContent = fieldElement.fieldLabel; // kiírjuk a label szövegét
             field.appendChild(label); // hozzácsapjuk a field divhez
-        
-            let input = document.createElement('input'); // létrehozunk egy input mezőt
-            input.id = fieldElement.fieldid; // beállítjuk az id-ját
+            
             field.appendChild(document.createElement('br')); // csinálunk egy sortörést, hogy az input új sorba kerüljön
-        
+            
             if (fieldElement.fieldid === 'sikeres') { // ha ez a sikeres mező...
                 input = document.createElement('select'); // csinálunk egy legördülő listát
                 input.id = fieldElement.fieldid; // beállítjuk az id-t

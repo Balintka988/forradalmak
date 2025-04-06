@@ -1,3 +1,4 @@
+const array = []; // létrehozok egy array tömböt
 const makeDiv = (className) => { // csinál egy divet a megadott class névvel arrow functionnel
     const div = document.createElement('div'); // létrehoz egy új div elemet
     div.className = className; // beállítja a class nevét
@@ -55,8 +56,6 @@ for(const fieldElement of fieldElementList){ // végigmegyünk az összes mező 
     label.textContent = fieldElement.fieldLabel; // kiírjuk a label szövegét
     field.appendChild(label); // hozzácsapjuk a field divhez
 
-    let input = document.createElement('input'); // létrehozunk egy input mezőt
-    input.id = fieldElement.fieldid; // beállítjuk az id-ját
     field.appendChild(document.createElement('br')); // csinálunk egy sortörést, hogy az input új sorba kerüljön
 
     if (fieldElement.fieldid === 'sikeres') { // ha ez a sikeres mező...
@@ -75,7 +74,7 @@ for(const fieldElement of fieldElementList){ // végigmegyünk az összes mező 
         input.appendChild(optionNem); // hozzáadjuk a "nem"-et
     }
     else{ // ha az if fentebb nem teljesül
-        input = document.createElement('input'); // ha nem a "sikeres" mező, akkor sima input
+        input = document.createElement('input'); // ha nem a "sikeres" mező, akkor sima inputot hozunk létre
         input.id = fieldElement.fieldid; // beállítjuk az id-t
     }
     field.appendChild(input); // végül belerakjuk az inputot is a field divbe
@@ -84,6 +83,34 @@ for(const fieldElement of fieldElementList){ // végigmegyünk az összes mező 
 const buttonFormSim = document.createElement('button'); // létrehozunk egy gombot
 buttonFormSim.textContent = 'hozzáadás'; // a gomb szövege az lesz hogy "hozzáadás"
 formSim.appendChild(buttonFormSim); // hozzácsapjuk a formhoz
+
+formSim.addEventListener('submit', (e)=> { // amikor a formot elküldik (submit), akkor ez lefut
+    e.preventDefault(); // megakadályozzuk hogy az oldal újratöltődjön
+    const valueObject = {}; // ebbe az objektumba fogjuk gyűjteni a mezők értékeit
+
+    const inputFields = e.target.querySelectorAll('input, select'); // lekérjük az összes input és select mezőt a formból
+    for(const inputField of inputFields){ // végigmegyünk az inputokon
+        valueObject[inputField.id] = inputField.value; // kulcsnak az input id, értéknek a beírt dolog
+    }
+
+    array.push(valueObject); // hozzáadjuk az objektumot egy tömbhöz (feltételezzük hogy az array már létezik)
+
+    const tbRow = document.createElement('tr'); // csinálunk egy új sort a táblába
+    tbody.appendChild(tbRow); // belerakjuk a tbody-be
+
+    const forradalomCell = document.createElement('td'); // forradalom nak létrehozunk egy cellát
+    forradalomCell.textContent = valueObject.forradalom; // cella szövegébe a forradalom
+    tbRow.appendChild(forradalomCell); // hozzáadjuk a sorhoz
+
+    const evszamCell = document.createElement('td'); // évhez cella
+    evszamCell.textContent = valueObject.evszam; // kiírjuk a beírt évet
+    tbRow.appendChild(evszamCell); // hozzáadjuk a sorhoz
+
+    
+    const sikeresECell = document.createElement('td'); // sikeres-e cella létrehozása
+    sikeresECell.textContent = valueObject.sikeres; // szövegbe az igen vagy nem
+    tbRow.appendChild(sikeresECell); // hozzáadjuk a sorhoz
+})
 
 
 containerDiv.appendChild(tableDiv); // belerakjuk a table divet a containerbe
