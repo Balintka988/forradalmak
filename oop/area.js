@@ -77,42 +77,18 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
 }
 
 class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-ból öröklődik
-    constructor(cssClass, fieldsList, manager){ // konstruktor, megkapja a cssclass nevet
+    #inputTomb; // privát változó, ebbe gyűjtjük az összes FormField objektumot
+
+    constructor(cssClass, fieldsList, manager) { // konstruktor, megkapja a css class nevet, mezőlistát és egy managert
         super(cssClass, manager); // meghívjuk az ős (Area) konstruktorát
+        this.#inputTomb = []; // inicializáljuk az inputTomb tömböt, ide kerülnek a mezők
         const form = document.createElement('form'); // csinálunk egy form html elemet
         this.div.appendChild(form); // belerakjuk a formot az Area által létrehozott div-be
-        
-        for(const fieldElement of fieldsList){ // végigmegyünk az összes mező objektumon
-            const field = makeDiv('field'); // csinálunk egy divet "field" class-szal
-            form.appendChild(field); // hozzáadjuk a formhoz
-        
-            const label = document.createElement('label'); // csinálunk egy label elemet
-            label.htmlFor = fieldElement.fieldid; // beállítjuk hogy melyik inputhoz tartozik
-            label.textContent = fieldElement.fieldLabel; // kiírjuk a label szövegét
-            field.appendChild(label); // hozzácsapjuk a field divhez
-            
-            field.appendChild(document.createElement('br')); // csinálunk egy sortörést, hogy az input új sorba kerüljön
-            
-            if (fieldElement.fieldid === 'sikeres') { // ha ez a sikeres mező...
-                input = document.createElement('select'); // csinálunk egy legördülő listát
-                input.id = fieldElement.fieldid; // beállítjuk az id-t
-        
-                const optionIgen = document.createElement('option'); // első opció
-                optionIgen.value = 'igen';// belső érték
-                optionIgen.innerText = 'igen';// megjelenő szöveg
-        
-                const optionNem = document.createElement('option'); // második opció
-                optionNem.value = 'nem';// belső érték
-                optionNem.innerText = 'nem';// megjelenő szöveg
-        
-                input.appendChild(optionIgen); // hozzáadjuk az "igen"-t
-                input.appendChild(optionNem); // hozzáadjuk a "nem"-et
-            }
-            else{ // ha az if fentebb nem teljesül
-                input = document.createElement('input'); // ha nem a "sikeres" mező, akkor sima input
-                input.id = fieldElement.fieldid; // beállítjuk az id-t
-            }
-            field.appendChild(input); // végül belerakjuk az inputot is a field divbe
+
+        for (const fieldElement of fieldsList) { // végigmegyünk az összes mező objektumon
+            const formField = new FormField(fieldElement.fieldid, fieldElement.fieldLabel); // létrehozunk egy új FormField objektumot az adott mező alapján
+            this.#inputTomb.push(formField); // eltároljuk a mezőt az inputTomb tömbben
+            form.appendChild(formField.getDiv()); // hozzáadjuk a mezőhöz tartozó HTML elemeket a form-hoz
         }
         
         const buttonFormSim = document.createElement('button'); // létrehozunk egy gombot
@@ -132,5 +108,67 @@ class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-
 
             this.manager.addAdat(adat); // hozzáadjuk az objektumot egy tömbhöz (feltételezzük hogy az array már létezik)
         })
+    }
+}
+
+class FormField { // létrehozunk egy FormField nevű osztályt
+    #id; // privát változó azonosító tárolására
+    #inputMezo; // privát változó az input vagy select mezőhöz
+    #feliratElem; // privát változó a label (felirat) elemhez
+    #hibaElem; // privát változó a hibaüzenethez használt span elemhez
+
+    get id() { // getter metódus az id értékének lekérésére
+        return this.#id; // visszaadjuk az id értékét
+    }
+
+    get value() { // getter metódus az input értékének lekérésére
+        return this.#inputMezo.value; // visszaadjuk az input mező (vagy select) aktuális értékét
+    }
+
+    set error(message) { // setter metódus a hibaüzenet beállítására
+        this.#hibaElem.textContent = message; // beállítjuk a span szövegét a megadott üzenetre
+    }
+
+    constructor(id, feliratSzoveg) { // konstruktor, ami az új mezőt létrehozza
+        this.#id = id; // eltároljuk az id-t a privát változóban
+        this.#feliratElem = document.createElement('label'); // létrehozunk egy label elemet
+        this.#feliratElem.htmlFor = id; // beállítjuk, hogy melyik inputhoz tartozik a label
+        this.#feliratElem.textContent = feliratSzoveg; // beállítjuk a label szövegét
+
+        if (id === 'sikeres') { // ha az id "sikeres", akkor speciális mezőt csinálunk
+            this.#inputMezo = document.createElement('select'); // létrehozunk egy legördülő (select) mezőt
+            this.#inputMezo.id = id; // beállítjuk az id-t a select elemnek
+
+            const opIgen = document.createElement('option'); // létrehozunk egy "igen" opciót
+            opIgen.value = 'igen'; // beállítjuk az értékét "igen"-re
+            opIgen.innerText = 'igen'; // beállítjuk a megjelenített szöveget is
+
+            const opNem = document.createElement('option'); // létrehozunk egy "nem" opciót
+            opNem.value = 'nem'; // beállítjuk az értékét "nem"-re
+            opNem.innerText = 'nem'; // megjelenő szöveg "nem"
+
+            this.#inputMezo.appendChild(opIgen); // hozzáadjuk az "igen" opciót a select-hez
+            this.#inputMezo.appendChild(opNem); // hozzáadjuk a "nem" opciót is
+        } else { // ha az id nem "sikeres", akkor sima input mezőt csinálunk
+            this.#inputMezo = document.createElement('input'); // létrehozunk egy input mezőt
+            this.#inputMezo.id = id; // beállítjuk az input mező id-ját
+        }
+
+        this.#hibaElem = document.createElement('span'); // létrehozunk egy span elemet a hibáknak
+        this.#hibaElem.className = 'error'; // beállítjuk az osztályát "error"-ra (formázás miatt)
+    }
+
+    getDiv() { // metódus, ami visszaadja a teljes mezőt egy div-ben
+        const kontener = makeDiv('field'); // létrehozunk egy div-et, amibe az elemek kerülnek
+        const br1 = document.createElement('br'); // sortörés az input elé
+        const br2 = document.createElement('br'); // sortörés az input után
+
+        const elemek = [this.#feliratElem, br1, this.#inputMezo, br2, this.#hibaElem]; // tömbbe tesszük az összes elemet, amit hozzá akarunk adni a div-hez
+
+        for (const elem of elemek) { // végigmegyünk az elemek tömbön
+            kontener.appendChild(elem); // hozzáadjuk az aktuális elemet a div-hez
+        }
+
+        return kontener; // visszaadjuk a kész div-et, amiben benne van a label, input, br-ek és a hibaüzenet
     }
 }
