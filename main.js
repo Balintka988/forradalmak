@@ -78,6 +78,12 @@ for(const fieldElement of fieldElementList){ // végigmegyünk az összes mező 
         input.id = fieldElement.fieldid; // beállítjuk az id-t
     }
     field.appendChild(input); // végül belerakjuk az inputot is a field divbe
+
+    field.appendChild(document.createElement('br')) // sortörés hozzaadasa a mezohoz
+    const error = document.createElement('span'); // csinalunk egy span elemet hiba üzenetnek
+    error.className = 'error'; // beállitjuk az osztályt hogy error legyen
+    field.appendChild(error); // hozzafuzzuk a hiba üzenet span-t a mezohoz
+
 }
 
 const buttonFormSim = document.createElement('button'); // létrehozunk egy gombot
@@ -89,10 +95,26 @@ formSim.addEventListener('submit', (e)=> { // amikor a formot elküldik (submit)
     const valueObject = {}; // ebbe az objektumba fogjuk gyűjteni a mezők értékeit
 
     const inputFields = e.target.querySelectorAll('input, select'); // lekérjük az összes input és select mezőt a formból
-    for(const inputField of inputFields){ // végigmegyünk az inputokon
-        valueObject[inputField.id] = inputField.value; // kulcsnak az input id, értéknek a beírt dolog
+    let validE = true; // Érvényességet jelző logikai változó, kezdetben igaz
+
+    for(const inputField of inputFields){ // Végigiterálunk az összes input mezőn
+        const errorField = inputField.parentElement.querySelector('.error'); // Megkeressük a hozzá tartozó hibaüzenet mezőt
+
+        if(!errorField){ // Ha nincs ilyen mező
+            console.error('nincs errorfield'); // Hibaüzenet a konzolra
+            return; // Megszakítjuk a feldolgozást
+        }
+
+        errorField.textContent = ''; // Alaphelyzetbe állítjuk (kiürítjük) a hibaüzenet mezőt
+        if(inputField.value === ''){ // Ha az input mező üres
+            errorField.textContent = 'Add meg ezt is!'; // Kiírjuk a megfelelő hibaüzenetet
+            validE = false; // Az űrlapot érvénytelennek jelöljük
+        }
+
+        valueObject[inputField.id] = inputField.value; // Elmentjük az értéket: kulcs az input ID-je, érték a beírt adat
     }
 
+    if(validE){ // hogyha a validE valtozonk true ertekkel ter visza akkor legeneráljuk a táblázatot
     array.push(valueObject); // hozzáadjuk az objektumot egy tömbhöz (feltételezzük hogy az array már létezik)
 
     const tbRow = document.createElement('tr'); // csinálunk egy új sort a táblába
@@ -110,6 +132,7 @@ formSim.addEventListener('submit', (e)=> { // amikor a formot elküldik (submit)
     const sikeresECell = document.createElement('td'); // sikeres-e cella létrehozása
     sikeresECell.textContent = valueObject.sikeres; // szövegbe az igen vagy nem
     tbRow.appendChild(sikeresECell); // hozzáadjuk a sorhoz
+    }
 })
 
 

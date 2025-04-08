@@ -21,3 +21,7 @@ table, tr, th, td {
     margin-bottom: 12px;
     background-color: antiquewhite;
 }
+
+.error{
+    color: red;
+}
