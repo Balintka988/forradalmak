@@ -99,17 +99,23 @@ class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-
             e.preventDefault(); // megakadályozzuk hogy az oldal újratöltődjön
             const valueObject = {}; // ebbe az objektumba fogjuk gyűjteni a mezők értékeit
         
-            const inputFields = e.target.querySelectorAll('input, select'); // lekérjük az összes input és select mezőt a formból
-            for(const inputField of inputFields){ // végigmegyünk az inputokon
-                valueObject[inputField.id] = inputField.value; // kulcsnak az input id, értéknek a beírt dolog
+            let validE = true; // ideiglenes változó az ellenőrzéshez true kezdeti paraméter
+             for(const errorformField of this.#inputTomb){ // végigmegyünk az összes mezőn
+                errorformField.error = ''; // alapból töröljük a hibát
+                 if(errorformField.value === ''){ // ha nincs kitöltve a mezo
+                    errorformField.error = 'Add meg ezt is'; // hibauzenet ha üres
+                     validE = false; // nem validE a form
+                 }
+                 valueObject[errorformField.id] = errorformField.value; // eltároljuk a mező értékét
+             }
+            if(validE){ // ha minden mező ki van töltve
+                const adat = new Adat(valueObject.forradalom, valueObject.evszam, valueObject.sikeres); // a form mezőkből létrehozunk egy új Adat példányt a megadott forradalom, évszám és sikeresség adatokkal
+                this.manager.addAdat(adat); // hozzáadjuk az objektumot egy tömbhöz (feltételezzük hogy az array már létezik)
             }
-            
-            const adat = new Adat(valueObject.forradalom, valueObject.evszam, valueObject.sikeres); // a form mezőkből létrehozunk egy új Adat példányt a megadott forradalom, évszám és sikeresség adatokkal
-
-            this.manager.addAdat(adat); // hozzáadjuk az objektumot egy tömbhöz (feltételezzük hogy az array már létezik)
         })
     }
 }
+
 
 class FormField { // létrehozunk egy FormField nevű osztályt
     #id; // privát változó azonosító tárolására
