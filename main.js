@@ -138,3 +138,45 @@ formSim.addEventListener('submit', (e)=> { // amikor a formot elküldik (submit)
 
 containerDiv.appendChild(tableDiv); // belerakjuk a table divet a containerbe
 containerDiv.appendChild(formDiv); // aztán berakjuk a form divet is
+
+const fileUploadInput = document.createElement('input'); // létrehozunk egy input elemet hogy fájlt lehessen választani
+containerDiv.appendChild(fileUploadInput); // hozzáadjuk az inputot a containerDiv-hez hogy látszódjon
+fileUploadInput.id = 'fileInput'; // beállítjuk az id-t hogy könnyebben lehessen hivatkozni rá
+fileUploadInput.type = 'file'; // beállítjuk az input típusát fájl választásra
+fileUploadInput.addEventListener('change', (e) => { // figyeljük a fájlválasztást, hogy mikor történik változás
+
+    const selectedFile = e.target.files[0]; // kiválasztjuk az első fájlt
+    const fileReader = new FileReader(); // új FileReader példányt készítünk hogy beolvassuk a fájlt
+
+    fileReader.onload = () => { // amikor betöltődött a fájl
+        const fileContent = fileReader.result.split('\n'); // sorokra bontjuk a fájl tartalmát
+        const dataWithoutHeader = fileContent.slice(1); // levágjuk az első sort (fejlécet)
+
+        for (const row of dataWithoutHeader) { // végigmegyünk a sorokon
+            const cleanedRow = row.trim(); // eltavolítjuk a felesleges szóközöket
+            const fields = cleanedRow.split(';'); // szétbontjuk a sorokat a pontosvesszők mentén
+            const person = { // objektumot csinalunk a mezők alapján
+                name: fields[0], // a név az első mező
+                birth: fields[1], // a születési dátum a második mező
+                zipcode: fields[2] // a kód a harmadik mező
+            };
+
+            array.push(person); // hozzáadjuk a személyt a már létező tömbhöz
+            const tableRow = document.createElement('tr'); // új tablázat sor
+            tbody.appendChild(tableRow); // hozzaadjuk a táblázat törzséhez
+            
+            const nameColumn = document.createElement('td'); // létrehozunk egy új cellát a névnek
+            nameColumn.textContent = person.name; // beállítjuk a cella szövegét a névre
+            tableRow.appendChild(nameColumn); // hozzaadjuk a nevet a sorhoz
+
+            const birthColumn = document.createElement('td'); // létrehozunk egy új cellát a születési dátumnak
+            birthColumn.textContent = person.birth; // beállítjuk a cella szövegét a születési dátumra
+            tableRow.appendChild(birthColumn); // hozzaadjuk a születési dátumot a sorhoz
+
+            const zipCodeColumn = document.createElement('td'); // létrehozunk egy új cellát a postaláda kódnak
+            zipCodeColumn.textContent = person.zipcode; // beállítjuk a cella szövegét a postaláda kódra
+            tableRow.appendChild(zipCodeColumn); // hozzaadjuk a postaláda kódot a sorhoz
+        }
+    };
+    fileReader.readAsText(selectedFile); // beolvassuk a fájlt szövegként
+});
