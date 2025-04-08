@@ -158,7 +158,7 @@ fileUploadInput.addEventListener('change', (e) => { // figyeljük a fájlválasz
             const adat = { // objektumot csinalunk a mezők alapján
                 forradalom: fields[0], // a forradalom az első mező
                 evszam: fields[1], // az évszám második mező
-                igenNem: fields[2] // az igen/nem a harmadik mező
+                sikeres: fields[2] // az igen/nem a harmadik mező
             };
 
             array.push(adat); // hozzáadjuk a adatokat a már létező tömbhöz
@@ -173,10 +173,35 @@ fileUploadInput.addEventListener('change', (e) => { // figyeljük a fájlválasz
             evszamColumn.textContent = adat.evszam; // beállítjuk a cella szövegét az évszámot
             tableRow.appendChild(evszamColumn); // hozzaadjuk az évszámot a sorhoz
 
-            const igenNemColumn = document.createElement('td'); // létrehozunk egy új cellát az igen/nem döntésnek
-            igenNemColumn.textContent = adat.igenNem; // beállítjuk a cella szövegét a választottra
-            tableRow.appendChild(igenNemColumn); // hozzaadjuk a sorhoz
+            const sikeresColumn = document.createElement('td'); // létrehozunk egy új cellát az igen/nem döntésnek
+            sikeresColumn.textContent = adat.sikeres; // beállítjuk a cella szövegét a választottra
+            tableRow.appendChild(sikeresColumn); // hozzaadjuk a sorhoz
         }
     };
     fileReader.readAsText(selectedFile); // beolvassuk a fájlt szövegként
+});
+
+
+const letoltesGomb = document.createElement('button'); // létrehozunk egy új gomb elemet
+letoltesGomb.textContent = 'Letöltés'; // beállítjuk a gomb szövegét "Letöltés"-re
+containerDiv.appendChild(letoltesGomb); // hozzáadjuk a gombot a container divhez
+
+letoltesGomb.addEventListener('click', () => { // eseményfigyelő a gombra, ha rákattintanak
+    const link = document.createElement('a'); // létrehozunk egy link elemet, amin keresztül letöltjük az adatokat
+
+    const letoltesTaroloTomb = ['forradalom;evszam;sikeres']; // létrehozunk egy tömböt, aminek az első eleme a fejléc
+
+    for (const data of array) { // végigmegyünk az adatokon
+        letoltesTaroloTomb.push(`${data.forradalom};${data.evszam};${data.sikeres}`); // hozzáadjuk a sorokat a tömbhöz pontosvesszővel elválasztva
+    }
+
+    const content = letoltesTaroloTomb.join('\n'); // a tömböt szöveggé alakítjuk, soronként elválasztva
+
+    const file = new Blob([content]); // létrehozunk egy új fájlt (Blob objektum) a tartalomból
+
+    link.href = URL.createObjectURL(file); // létrehozunk egy ideiglenes letöltési URL-t a fájlhoz
+    link.download = 'newdata.csv'; // beállítjuk a letöltendő fájl nevét
+    link.click(); // automatikusan rákattintunk a linkre, így elindul a letöltés
+
+    URL.revokeObjectURL(link.href); // felszabadítjuk az ideiglenes URL-t, hogy ne foglaljon memóriát
 });
