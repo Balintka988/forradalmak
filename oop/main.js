@@ -17,4 +17,5 @@ const fieldsList = [{ // egy tömb objektumokkal, minden mezőről infó
 const manager = new Manager(); // manager példányosítása
 const table = new Table('table', manager); // példányosítjuk a Table osztályt, 'table' class-szal, managert is megadjuk neki
 const form = new Form('form', fieldsList, manager); // példányosítjuk a Form osztályt, 'form' class-szal, és egy listaval, és a managerrel
+const fileUploader = new Upload('upload', manager); // a fájlfeltöltőnk példányosítása
 // legalul kell lennie így hogy listet adunk at!

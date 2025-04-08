@@ -116,6 +116,40 @@ class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-
     }
 }
 
+class Upload extends Area { // létrehozunk egy Upload nevű osztályt, ami az Area osztályból származik
+    constructor(cssClass, manager) { // konstruktor, megkapja a css osztálynevet és egy managert
+        super(cssClass, manager); // meghívjuk az ősosztály konstruktorát
+
+        const fileInput = document.createElement('input'); // létrehozunk egy input elemet fájl feltöltéshez
+        fileInput.id = 'fileinput'; // beállítjuk az input id-jét
+        fileInput.type = 'file'; // megmondjuk hogy fájlt várjon ez az input
+        this.div.appendChild(fileInput); // hozzáadjuk az inputot a divhez amit az Area biztosít
+
+        fileInput.addEventListener('change', (e) => { // eseményfigyelő hogy ha változik az input (választanak fájlt)
+            const selectedFile = e.target.files[0]; // kivesszük az első kiválasztott fájlt
+            const reader = new FileReader(); // létrehozunk egy új FileReader példányt
+
+            reader.onload = () => { // ha betöltődött a fájl
+                const sorok = reader.result.split('\n'); // sorokra bontjuk a fájl tartalmát
+                const adatSorok = sorok.slice(1); // az első sort levágjuk (fejlécet elhagyjuk)
+
+                for (const sor of adatSorok) { // végigmegyünk minden adatsoron
+                    const tisztitottSor = sor.trim(); // eltávolítjuk a felesleges whitespace-eket
+                    const mezok = tisztitottSor.split(';'); // felosztjuk a sort a pontosvesszők mentén
+
+                    const adatok = new Adat( // létrehozunk egy új Adat példányt az adatokból
+                        mezok[0], // forradalom neve
+                        Number(mezok[1]), // évszám, számként
+                        mezok[2] // sima szöveg, igen/nem
+                    );
+                    this.manager.addAdat(adatok); // hozzáadjuk a létrehozott adatokat a managerhez
+                }
+            };
+            reader.readAsText(selectedFile); // elindítjuk a fájl beolvasását szövegként
+        });
+    }
+}
+
 
 class FormField { // létrehozunk egy FormField nevű osztályt
     #id; // privát változó azonosító tárolására

@@ -155,27 +155,27 @@ fileUploadInput.addEventListener('change', (e) => { // figyeljük a fájlválasz
         for (const row of dataWithoutHeader) { // végigmegyünk a sorokon
             const cleanedRow = row.trim(); // eltavolítjuk a felesleges szóközöket
             const fields = cleanedRow.split(';'); // szétbontjuk a sorokat a pontosvesszők mentén
-            const person = { // objektumot csinalunk a mezők alapján
-                name: fields[0], // a név az első mező
-                birth: fields[1], // a születési dátum a második mező
-                zipcode: fields[2] // a kód a harmadik mező
+            const adat = { // objektumot csinalunk a mezők alapján
+                forradalom: fields[0], // a forradalom az első mező
+                evszam: fields[1], // az évszám második mező
+                igenNem: fields[2] // az igen/nem a harmadik mező
             };
 
-            array.push(person); // hozzáadjuk a személyt a már létező tömbhöz
+            array.push(adat); // hozzáadjuk a adatokat a már létező tömbhöz
             const tableRow = document.createElement('tr'); // új tablázat sor
             tbody.appendChild(tableRow); // hozzaadjuk a táblázat törzséhez
             
-            const nameColumn = document.createElement('td'); // létrehozunk egy új cellát a névnek
-            nameColumn.textContent = person.name; // beállítjuk a cella szövegét a névre
-            tableRow.appendChild(nameColumn); // hozzaadjuk a nevet a sorhoz
+            const forradalomColumn = document.createElement('td'); // létrehozunk egy új cellát a forradalom
+            forradalomColumn.textContent = adat.forradalom; // beállítjuk a cella szövegét a forradalomra
+            tableRow.appendChild(forradalomColumn); // hozzaadjuk a forradalmat a sorhoz
 
-            const birthColumn = document.createElement('td'); // létrehozunk egy új cellát a születési dátumnak
-            birthColumn.textContent = person.birth; // beállítjuk a cella szövegét a születési dátumra
-            tableRow.appendChild(birthColumn); // hozzaadjuk a születési dátumot a sorhoz
+            const evszamColumn = document.createElement('td'); // létrehozunk egy új cellát az évszámnak
+            evszamColumn.textContent = adat.evszam; // beállítjuk a cella szövegét az évszámot
+            tableRow.appendChild(evszamColumn); // hozzaadjuk az évszámot a sorhoz
 
-            const zipCodeColumn = document.createElement('td'); // létrehozunk egy új cellát a postaláda kódnak
-            zipCodeColumn.textContent = person.zipcode; // beállítjuk a cella szövegét a postaláda kódra
-            tableRow.appendChild(zipCodeColumn); // hozzaadjuk a postaláda kódot a sorhoz
+            const igenNemColumn = document.createElement('td'); // létrehozunk egy új cellát az igen/nem döntésnek
+            igenNemColumn.textContent = adat.igenNem; // beállítjuk a cella szövegét a választottra
+            tableRow.appendChild(igenNemColumn); // hozzaadjuk a sorhoz
         }
     };
     fileReader.readAsText(selectedFile); // beolvassuk a fájlt szövegként
