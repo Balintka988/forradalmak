@@ -31,26 +31,37 @@ class Area {//létrehozunk egy osztályt
 }
 
 class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Area ősosztályból öröklődik
-    constructor(cssClass, manager){ // konstruktor, kap egy cssclass nevet
+    constructor(cssClass, manager) { // konstruktor, kap egy cssclass nevet és egy managert
         super(cssClass, manager); // meghívjuk az Area osztály konstruktorát vele
-        const tabla = this.#makeTable(); // privat metodus visszatérési értékének hivasa amit egy valtozoban tarolunk el
+        const tbody = this.#makeTable(); // privát metódus visszatérési értékét tároljuk el egy változóban
         
-        this.manager.setAddAdatCallback((adatok) => { // a manager setAddAdatCallback függvényének itt adjuk meg a bemeneti paramétert, a callbacket.
-            const tbRow = document.createElement('tr'); // csinálunk egy új sort a táblába
-            tabla.appendChild(tbRow); // belerakjuk a tbody-be amivel a #makeTable metodus tér vissza
-        
-            const forradalomCell = document.createElement('td'); // forradalom nak létrehozunk egy cellát
-            forradalomCell.textContent = adatok.forradalom; // cella szövegébe a forradalom
-            tbRow.appendChild(forradalomCell); // hozzáadjuk a sorhoz
-        
-            const evszamCell = document.createElement('td'); // évhez cella
-            evszamCell.textContent = adatok.evszam; // kiírjuk a beírt évet
-            tbRow.appendChild(evszamCell); // hozzáadjuk a sorhoz
-            
-            const sikeresECell = document.createElement('td'); // sikeres-e cella létrehozása
-            sikeresECell.textContent = adatok.sikeres; // szövegbe az igen vagy nem
-            tbRow.appendChild(sikeresECell); // hozzáadjuk a sorhoz
-        })
+        this.manager.setAddAdatCallback((adatok) => { // callback függvény beállítása adatok hozzáadásához
+            this.#adatSorra(adatok, tbody); // adatokat ad a táblázat egy sorához
+        });
+    
+        this.manager.setRenderTableCallback((array) => { // callback függvény beállítása a táblázat újrarendereléséhez
+            tbody.innerHTML = ''; // táblázat kiürítése
+            for (const adat of array) { // végigmegyünk az adatok tömbjén
+                this.#adatSorra(adat, tbody); // új sorokat hozunk létre az adatok alapján
+            }
+        });
+    }    
+     
+    #adatSorra(adat, tbody){ // ezt hívjuk meg akkor amikor egy sort szeretnenk a tablazatunkba adatokkal
+       const tbRow = document.createElement('tr'); // csinálunk egy új sort a táblába
+       tbody.appendChild(tbRow); // belerakjuk a tbody-be amivel a #makeTable metodus tér vissza
+
+       const forradalomCell = document.createElement('td'); // forradalom nak létrehozunk egy cellát
+       forradalomCell.textContent = adat.forradalom; // cella szövegébe a forradalom
+       tbRow.appendChild(forradalomCell); // hozzáadjuk a sorhoz
+
+       const evszamCell = document.createElement('td'); // évhez cella
+       evszamCell.textContent = adat.evszam; // kiírjuk a beírt évet
+       tbRow.appendChild(evszamCell); // hozzáadjuk a sorhoz
+       
+       const sikeresECell = document.createElement('td'); // sikeres-e cella létrehozása
+       sikeresECell.textContent = adat.sikeres; // szövegbe az igen vagy nem
+       tbRow.appendChild(sikeresECell); // hozzáadjuk a sorhoz
     }
 
     #makeTable(){ // privat metódus ami a fejlecet és a tbody-t hozza létre
@@ -139,7 +150,7 @@ class UploadDownload extends Area { // létrehozunk egy UploadDownload nevű osz
 
                     const adatok = new Adat( // létrehozunk egy új Adat példányt az adatokból
                         mezok[0], // forradalom neve
-                        Number(mezok[1]), // évszám, számként
+                        mezok[1], // évszám
                         mezok[2] // sima szöveg, igen/nem
                     );
                     this.manager.addAdat(adatok); // hozzáadjuk a létrehozott adatokat a managerhez
@@ -224,5 +235,53 @@ class FormField { // létrehozunk egy FormField nevű osztályt
         }
 
         return kontener; // visszaadjuk a kész div-et, amiben benne van a label, input, br-ek és a hibaüzenet
+    }
+}
+
+class FilterForm extends Area { // a FilterForm osztályunk az Area ősosztályból származik
+    constructor(cssClass, manager) { // konstruktor, megkapja a css osztálynevet és egy managert 
+        super(cssClass, manager); // meghívja az Area ősosztály konstruktorát
+
+        const form = document.createElement('form'); // létrehoz egy form elemet a szűréshez
+        this.div.appendChild(form); // hozzáadja a formot a div-hez, amelyet az Area hozott létre
+
+        const select = document.createElement('select'); // létrehoz egy legördülő menüt
+        form.appendChild(select); // hozzáadja a legördülőt a formhoz
+
+        const options = [ // opciók definiálása a legördülő menühöz
+            { value: '', innerText: 'Válassz mezőt' }, // alapértelmezett opció
+            { value: 'forradalom', innerText: 'Forradalom' }, // első szűrési opció
+            { value: 'evszam', innerText: 'Évszám' }, // második szűrési opció
+            { value: 'sikeres', innerText: 'Sikeres' }, // harmadik szűrési opció
+        ];
+
+        for (const option of options) { // végigmegy az opciók listáján
+            const optionElement = document.createElement('option'); // létrehoz egy új opció elemet
+            optionElement.value = option.value; // beállítja az opció értékét
+            optionElement.innerText = option.innerText; // beállítja az opció szövegét
+            select.appendChild(optionElement); // hozzáadja az opciót a legördülő menühöz
+        }
+
+        const input = document.createElement('input'); // létrehoz egy bemeneti mezőt
+        input.id = 'filterInput'; // beállítja az input mező id-jét
+        form.appendChild(input); // hozzáadja az input mezőt a formhoz
+
+        const button = document.createElement('button'); // létrehoz egy gombot
+        button.innerText = 'Szűrés'; // beállítja a gomb szövegét
+        form.appendChild(button); // hozzáadja a gombot a formhoz
+
+        form.addEventListener('submit', (e) => { // eseményfigyelő hozzáadása a formhoz
+            e.preventDefault(); // alapértelmezett form viselkedés tiltása (oldal újratöltés)
+
+            const filterInput = e.target.querySelector('#filterInput'); // lekéri az input mezőt
+            const selectedOption = e.target.querySelector('select').value; // lekéri a kiválasztott opciót a legördülőből
+
+            this.manager.filter((element) => { // szűrési logika alkalmazása a manager objektumon keresztül
+                if (selectedOption === '') { // ellenőrzi, hogy nincs-e kiválasztva opció
+                    return true; // ha nincs kiválasztva semmi, ne szűrjön
+                }
+                return element[selectedOption] === filterInput.value; // szűrés az input értéke alapján történik
+            });
+        });
     }
 }
