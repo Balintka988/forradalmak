@@ -13,7 +13,7 @@ class Area {//létrehozunk egy osztályt
 
     constructor(className, manager) { // konstruktor, kap egy class nevet és egy managert
         this.#manager = manager; // beállítjuk a privát #manager változót a kapott értékre
-        const container = this.#getContainerDiv(); // itt hívjuk meg a privát metódust amit egy változóban tárolunk el
+        const container = this.#getContainerDiv(); // itt hívjuk meg a privát metódus visszatérési értékét amit egy változóban tárolunk el
         this.#div = document.createElement('div'); // létrehoz egy új divet a kapott class-hoz
         this.#div.className = className; // beállítja a class nevet amit paraméterként kapott
         container.appendChild(this.#div); // berakja az új divet a containeroop divbe
@@ -33,9 +33,9 @@ class Area {//létrehozunk egy osztályt
 class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Area ősosztályból öröklődik
     constructor(cssClass, manager){ // konstruktor, kap egy cssclass nevet
         super(cssClass, manager); // meghívjuk az Area osztály konstruktorát vele
-        const tabla = this.#makeTable(); // privat metodus hivas amit egy valtozoban tarolunk el
+        const tabla = this.#makeTable(); // privat metodus visszatérési értékének hivasa amit egy valtozoban tarolunk el
         
-        this.manager.setAddAdatCallback((adatok) => { // arrow function 
+        this.manager.setAddAdatCallback((adatok) => { // a manager setAddAdatCallback függvényének itt adjuk meg a bemeneti paramétert, a callbacket.
             const tbRow = document.createElement('tr'); // csinálunk egy új sort a táblába
             tabla.appendChild(tbRow); // belerakjuk a tbody-be amivel a #makeTable metodus tér vissza
         
@@ -116,7 +116,7 @@ class Form extends Area { // létrehozunk egy Form nevű osztályt, ami az Area-
     }
 }
 
-class Upload extends Area { // létrehozunk egy Upload nevű osztályt, ami az Area osztályból származik
+class UploadDownload extends Area { // létrehozunk egy UploadDownload nevű osztályt, ami az Area osztályból származik
     constructor(cssClass, manager) { // konstruktor, megkapja a css osztálynevet és egy managert
         super(cssClass, manager); // meghívjuk az ősosztály konstruktorát
 
@@ -147,6 +147,20 @@ class Upload extends Area { // létrehozunk egy Upload nevű osztályt, ami az A
             };
             reader.readAsText(selectedFile); // elindítjuk a fájl beolvasását szövegként
         });
+        const letoltesButton = document.createElement('button'); // létrehozunk egy gomb elemet
+        letoltesButton.textContent = 'Letöltés'; // beállítjuk a gomb feliratát "Letöltés"-re
+        this.div.appendChild(letoltesButton); // hozzáadjuk a gombot a div-hez, amit az osztály példányban eltároltunk
+
+        letoltesButton.addEventListener('click', () => { // eseményfigyelő a gombra, amikor rákattintanak
+            const link = document.createElement('a'); // létrehozunk egy ideiglenes link elemet
+            const tartalom = this.manager.generateOutputString(); // lekérjük a managerből a letöltendő szöveget
+            const file = new Blob([tartalom]); // blob fájl objektumot készítünk a szövegből
+            link.href = URL.createObjectURL(file); // létrehozunk egy ideiglenes URL-t a fájlhoz
+            link.download = 'newdataOop.csv'; // beállítjuk a letöltésre kerülő fájl nevét
+            link.click(); // automatikusan rákattintunk a linkre, elindítva a letöltést
+            URL.revokeObjectURL(link.href); // felszabadítjuk az ideiglenes URL-t
+        });
+
     }
 }
 

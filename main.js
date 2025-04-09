@@ -1,5 +1,5 @@
 const array = []; // létrehozok egy array tömböt
-const makeDiv = (className) => { // csinál egy divet a megadott class névvel arrow functionnel
+const makeDiv = (className) => { // csinál egy olyan divet amit a függvény hívasakor adunk, amit classNameként kezel a kód
     const div = document.createElement('div'); // létrehoz egy új div elemet
     div.className = className; // beállítja a class nevét
     return div; // visszaadja a divet

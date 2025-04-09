@@ -14,4 +14,12 @@ class Manager { // egy Manager nevű osztály, kezeli az adatokat
         this.#array.push(adat); // belerakjuk az új adatot a privát tömbbe
         this.#addAdatCallback(adat); // meghívjuk a callbacket az új adattal
     }
+
+    generateOutputString() { // a letöltéshez szükséges szöveget generaljuk itt
+        const eredmeny = ['forradalom;evszam;sikeres']; // létrehozunk egy tömböt amely a fejlécet tartalmazza
+        for (const adat of this.#array) { // végigmegyünk a privat adattömb elemein
+            eredmeny.push(`${adat.forradalom};${adat.evszam};${adat.sikeres}`); // hozzáadjuk az adatokat pontosvesszővel elválasztva
+        }
+        return eredmeny.join('\n'); // a sorokat egy szöveggé fűzzük össze sortöréssel elválasztva
+    }
 }
