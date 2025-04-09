@@ -5,6 +5,23 @@ const makeDiv = (className) => { // csinál egy olyan divet amit a függvény h�
     return div; // visszaadja a divet
 }
 
+/**
+ * @param {Array} adatokArray - A bemeneti tömb, amin végrehajtjuk a szűrést.
+ * @param {Function} callback - Egy függvény, amely minden elemre lefut. 
+ *                               Ha true értéket ad vissza, az elem bekerül az eredménybe.
+ * @returns {Array} Egy új tömb, amely csak a callback szerint megfelelő elemeket tartalmazza.
+ */
+const filter = (adatokArray, callback) => { // Létrehozunk egy saját filter függvényt, ami egy tömböt és egy szűrőfüggvényt (callback) vár
+    const eredmeny = []; // Ebbe a tömbbe fogjuk gyűjteni a szűrésnek megfelelő elemeket
+    for (const elem of adatokArray) { // Végigiterálunk az eredeti tömb elemein
+        if (callback(elem)) { // Meghívjuk a callback függvényt az aktuális elemre, és ha az true-t ad vissza
+            eredmeny.push(elem); // akkor hozzáadjuk az eredmény tömbhöz
+        }
+    }
+    return eredmeny; // Visszaadjuk a szűrés után kapott új tömböt
+}
+
+
 const containerDiv = makeDiv('container'); // container nevű divet csinál
 document.body.appendChild(containerDiv); // hozzáadja a bodyhoz a container divet
 const tableDiv = makeDiv('table'); // csinál egy table nevű divet
@@ -204,4 +221,79 @@ letoltesGomb.addEventListener('click', () => { // eseményfigyelő a gombra, ha 
     link.click(); // automatikusan rákattintunk a linkre, így elindul a letöltés
 
     URL.revokeObjectURL(link.href); // felszabadítjuk az ideiglenes URL-t, hogy ne foglaljon memóriát
+});
+
+const filterFormDiv = makeDiv('filterForm'); // létrehozunk egy divet a szűrési űrlapnak
+containerDiv.appendChild(filterFormDiv); // hozzáadjuk a containerhez
+
+const formForSzures = document.createElement('form'); // létrehozunk egy új formot
+filterFormDiv.appendChild(formForSzures); // hozzáadjuk a szurési divhez
+
+const select = document.createElement('select'); // létrehozunk egy legördülo mezőt
+formForSzures.appendChild(select); // hozzáadjuk a formhoz
+
+const options = [ // legördülő menü lehetőségei
+    {
+        value: '', // nincs érteke az első sornak, majd ez alapján kell őt keresni
+        innerText: 'Válassz mezőt' // első sorban megjelenő szöveg
+    },
+    {
+        value: 'forradalom', // masodik sor id
+        innerText: 'Forradalom' // masodik sorban megjelenő szöveg
+    },
+    {
+        value: 'evszam', // harmadik sor id
+        innerText: 'Évszám' // harmadik sorban megjelenő szöveg
+    },
+    {
+        value: 'sikeres', // negyedik sor id
+        innerText: 'Sikeres' // negyedik sorban megjelenő szöveg
+    }
+];
+
+for(const opt of options){ // végigmegyünk a lehetőségeken
+    const optElement = document.createElement('option'); // létrehozunk egy új opciót
+    optElement.value = opt.value; // beállítjuk az értékét
+    optElement.innerText = opt.innerText; // megjelenítendő szöveg
+    select.appendChild(optElement); // hozzáadjuk a legördülőhöz
+}
+
+const bemenet =  document.createElement('input'); // létrehozunk egy input mezőt
+bemenet.id = 'filterInput'; // beállítjuk az id-t
+formForSzures.appendChild(bemenet); // hozzáadjuk a formhoz
+
+const button = document.createElement('button'); // létrehozunk egy gombot
+button.innerText = 'Szűrés'; // beállítjuk a szöveget
+formForSzures.appendChild(button); // hozzáadjuk a formhoz
+
+formForSzures.addEventListener('submit', (e) => { // eseményfigyelő a form submit eseményére
+    e.preventDefault(); // ne töltse újra az oldalt
+
+    const filterInput = e.target.querySelector('#filterInput'); // lekérjük az input mezőt
+    const select = e.target.querySelector('select'); // lekérjük a legördülőt
+
+    const szurtArray = filter(array, (element) => { // saját filter függvényt használunk, amit legfelül hoztunk létre
+        const mezo = select.value; // kiválasztott mező
+        if (mezo === '') return true; // ha nincs kiválasztva semmi, akkor ne szűrjön
+        return element[mezo] === filterInput.value; // csak azokat adja vissza, ahol egyezik az érték
+    });
+
+    tbody.innerHTML = ''; // kiürítjük a jelenlegi táblázatot
+
+    for (const adat of szurtArray) { // újra létrehozzuk a már szűrt sorokat
+        const tableRow = document.createElement('tr'); // új táblázatsor
+        tbody.appendChild(tableRow); // hozzáadjuk a táblázat törzshöz
+    
+        const forradalomColumn = document.createElement('td'); // új oszlop a forradalomnak
+        forradalomColumn.textContent = adat.forradalom; // beállítjuk az értékét
+        tableRow.appendChild(forradalomColumn); // hozzáadjuk a sorhoz
+    
+        const evszamColumn = document.createElement('td'); // új oszlop az évszámnak
+        evszamColumn.textContent = adat.evszam; // beállítjuk az értékét
+        tableRow.appendChild(evszamColumn); // hozzáadjuk a sorhoz
+    
+        const sikeresColumn = document.createElement('td'); // új oszlop a sikerességnek
+        sikeresColumn.textContent = adat.sikeres; // beállítjuk az értékét
+        tableRow.appendChild(sikeresColumn); // hozzáadjuk a sorhoz
+    }
 });
