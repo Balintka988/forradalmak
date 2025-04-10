@@ -7,11 +7,17 @@ class Manager { // egy Manager nevű osztály, kezeli az adatokat
         this.#array = []; // inicializáljuk a privát tömböt üresen
     }
 
+    /**
+     * @param {Function} callback - a callback függvény amely az új adatot kezeli
+     */
     setAddAdatCallback(callback) { // beállítjuk a callback függvényt kívülről
         this.#addAdatCallback = callback; // eltároljuk a megadott callbacket privát változóban
     }
 
-    addAdat(adat) { // új adatot adunk a listához
+    /**
+     * @param {Adat} adat - az új adat objektum
+     */
+    addAdat(adat) { // új adatot adunk az adattömbhöz
         this.#array.push(adat); // belerakjuk az új adatot a privát tömbbe
         this.#addAdatCallback(adat); // meghívjuk a callbacket az új adattal
     }
@@ -23,6 +29,9 @@ class Manager { // egy Manager nevű osztály, kezeli az adatokat
         this.#renderTableCallback = callback; // eltárolja a callback függvényt a privát változóban
     }
 
+    /**
+     * @returns {string} - a letöltési szöveg pontosvesszővel elválasztott értékekkel
+     */
     generateOutputString() { // a letöltéshez szükséges szöveget generaljuk itt
         const eredmeny = ['forradalom;evszam;sikeres']; // létrehozunk egy tömböt amely a fejlécet tartalmazza
         for (const adat of this.#array) { // végigmegyünk a privat adattömb elemein
