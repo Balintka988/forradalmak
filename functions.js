@@ -26,7 +26,7 @@ const filter = (adatokArray, callback) => { // Létrehozunk egy saját filter f�
 
 /**
  * @param {HTMLElement} containerDiv - az a div, amelybe a táblázatot helyezzük
- * @param {Function} callback - egy függvény amely a táblázat törzsével (tbody) dolgozik
+ * @returns {void} - egy függvény amely a táblázat törzsével (tbody) dolgozik
  */
 const tablaKrealas = (containerDiv, callback) => { // letrehoz egy táblázatot a megadott containerDiv-ben és visszaadja a tbody-t a callback függvényen keresztul, a fuggvény végén
     const tableDiv = makeDiv('table'); // csinál egy table nevű divet

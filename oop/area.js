@@ -20,7 +20,7 @@ class Area {//létrehozunk egy osztályt
     /**
      * 
      * @param {string} className - amit kreálni szeretnénk pl 'table'
-     * @param {*} manager - a manager fájlunk
+     * @param {Manager} manager - a manager fájlunk
      */
     constructor(className, manager) { // konstruktor, kap egy class nevet és egy managert
         this.#manager = manager; // beállítjuk a privát #manager változót a kapott értékre
@@ -45,7 +45,7 @@ class Area {//létrehozunk egy osztályt
     
     /**
      * @param {string} label - a gomb szövege
-     * @returns a gomb elemmel tér vissza
+     * @returns {HTMLButtonElement } - a gomb elemmel tér vissza
      */
     gombLetrehozas(label) { // itt hozzuk létre a gombot
         const gomb = document.createElement('button'); // létrehoz egy új button elemet
@@ -53,11 +53,19 @@ class Area {//létrehozunk egy osztályt
         return gomb; // visszaadja az elkészített gombot
     }
 }
-
+/**
+ * @callback RenderTableCallback
+ * @param {HTMLElement} tbody
+ * @returns {void}
+ * 
+ * @callback addAdatCallback
+ *  @param {HTMLElement} tbody megkapja a tbody-t
+ * @returns {void}
+ */
 class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Area ősosztályból öröklődik
     /**
      * @param {string} cssClass - amit kreálni szeretnénk pl 'table'
-     * @param {*} manager - a manager fájlunk így tudunk bele hivatkozni
+     * @param {Manager} manager - a manager fájlunk így tudunk bele hivatkozni
      */
     constructor(cssClass, manager) { // konstruktor, kap egy cssclass nevet és egy managert
         super(cssClass, manager); // meghívjuk az Area osztály konstruktorát vele
@@ -68,8 +76,8 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
 
     }
         /**
-         * @param {string} tbody megkapja a tbody-t
-         * @returns 
+         * @param {HTMLElement} tbody megkapja a tbody-t
+         * @returns {void}
          */
         #renderTableCallback(tbody) { // táblázat újrarenderelése
             return (array) => { // visszaad egy callback függvényt, ami újrarendereli a táblázatot
@@ -81,8 +89,8 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
         }
         
         /**
-         * @param {string} tbody megkapja a tbody-t
-         * @returns 
+         * @param {HTMLElement} tbody megkapja a tbody-t
+         * @returns {void}
          */
         #addAdatCallback(tbody) { // új adat hozzáadása a táblázathoz
             return(adat) => { // visszaad egy callback függvényt, ami egy új sort ad a táblázathoz
@@ -144,8 +152,8 @@ class Form extends Area {
 
     /**
      * @param {string} cssClass a formhoz tartozó CSS osztály
-     * @param {Array} fieldsList a mezők listája
-     * @param {Object} manager a manager objektum
+     * @param {fieldsList[]} fieldsList a mezők listája
+     * @param {Manager} manager a manager objektum
      */
     constructor(cssClass, fieldsList, manager) { // konstruktor, ami beállítja a form alapvető tulajdonságait
         super(cssClass, manager); // meghívjuk az ős (Area) konstruktorát
@@ -155,7 +163,7 @@ class Form extends Area {
     }
 
     /**
-     * @param {Array} fieldsList a mezők listája
+     * @param {fieldsList[]} fieldsList a mezők listája
      * @returns {HTMLElement} a létrehozott form elem
      */ 
     #createForm(fieldsList) { // létrehoz egy form HTML elemet a mezőkkel és a gombbal
@@ -185,7 +193,7 @@ class Form extends Area {
     }
 
     /**
-     * @returns {Function} az event listener függvény
+     * @returns {void} az event listener függvény
      */
     #formSubmitEventListener() { // létrehoz egy event listener-t a form submit eseményére
         return (e) => { // esemenykezelő a form elküldéséhez
@@ -229,7 +237,7 @@ class Form extends Area {
 class UploadDownload extends Area { // létrehozunk egy UploadDownload nevű osztályt, ami az Area osztályból származik
     /** 
      * @param {string} cssClass az osztályhoz tartozó CSS osztály neve
-     * @param {object} manager a manager peldany amely kezeli az adatokat
+     * @param {Manager} manager a manager peldany amely kezeli az adatokat
      */
     constructor(cssClass, manager) { // konstruktor, megkapja a css osztálynevet és egy managert
         super(cssClass, manager); // meghívjuk az ősosztály konstruktorát
@@ -245,7 +253,7 @@ class UploadDownload extends Area { // létrehozunk egy UploadDownload nevű osz
         exportButton.addEventListener('click', this.#exportGombEventlistener()); // eseménykezelő a letöltés gombhoz
     }
     /** 
-     * @returns {function} a letöltés eseménykezelője
+     * @returns {void}
      */
     #exportGombEventlistener() { // privát metódus a letöltési eseményhez
         return () => { // visszatérés
@@ -259,7 +267,7 @@ class UploadDownload extends Area { // létrehozunk egy UploadDownload nevű osz
         };
     }
     /** 
-     * @returns {function} a fájl feltöltés eseménykezelője
+     * @returns {void} a fájl feltöltés eseménykezelője
      */
     #importInputEventListener() { // privát metódus a fájl feltöltési eseményhez
         return (e) => { // esemenykezelő a fajl feltöltéséhez

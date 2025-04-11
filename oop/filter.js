@@ -1,7 +1,7 @@
 class FilterForm extends Area { // a FilterForm osztályunk az Area ősosztályból származik
     /**
      * @param {string} cssClass - a CSS osztálynév amelyet az ősosztály div eleméhez ad
-     * @param {Object} manager - a manager objektum amely a szűrési logika végrehajtásáért felel
+     * @param {Manager} manager - a manager objektum amely a szűrési logika végrehajtásáért felel
      */
     constructor(cssClass, manager) { // konstruktor, megkapja a css osztálynevet és egy managert 
         super(cssClass, manager); // meghívja az Area ősosztály konstruktorát
