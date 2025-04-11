@@ -9,8 +9,8 @@ const makeDiv = (className) => { // csinál egy olyan divet amit a függvény h�
 }
 
 /**
- * @param {valueObject[]} adatokArray - A bemeneti tömb, amin végrehajtjuk a szűrést.
- * @param {function(valueObject):boolean} callback - Egy függvény, amely minden elemre lefut. 
+ * @param {Forradalom[]} adatokArray - A bemeneti tömb, amin végrehajtjuk a szűrést.
+ * @param {function(Forradalom):boolean} callback - Egy függvény, amely minden elemre lefut. 
  *                               Ha true értéket ad vissza, az elem bekerül az eredménybe.
  */
 const filter = (adatokArray, callback) => { // Létrehozunk egy saját filter függvényt, ami egy tömböt és egy szűrőfüggvényt (callback) vár
@@ -233,7 +233,7 @@ const sorHozzaadas = (valueObject, tbody) => { // a függvény amely hozzáadja 
  * lehetőve teszi a táblázat adatainak letöltését CSV formátumban
  * 
  * @param {HTMLElement} containerDiv - a kontener ahol a letöltés gombját tároljuk
- * @param {Array} array - a tablazat adatainak tombje amit letöltünk
+ * @param {{forradalom:String, evszam:string, sikeres:string}[]} array - a tablazat adatainak tombje amit letöltünk
  */
 const fajlLetoltes = (containerDiv, array) => { // a kreált táblázatot ez által tudjuk letölteni
     const letoltesGomb = document.createElement('button'); // létrehozunk egy új gomb elemet

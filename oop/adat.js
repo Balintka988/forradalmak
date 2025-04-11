@@ -1,6 +1,15 @@
 class Adat { // egy Adat nevű osztályt definiálunk, ez reprezentál egy adatbejegyzést
+    /**
+     * @type {string}
+     */
     #forradalom; // privát változó, a forradalom nevét tárolja
+    /**
+     * @type {string}
+     */
     #evszam; // privát változó, az évszámot tárolja
+    /**
+     * @type {string}
+     */
     #sikeres; // privát változó, azt tárolja hogy sikeres volt-e
 
     /**
@@ -11,14 +20,14 @@ class Adat { // egy Adat nevű osztályt definiálunk, ez reprezentál egy adatb
     }
 
     /**
-     * @returns {number} - a forradalom évszáma
+     * @returns {string} - a forradalom évszáma
      */
     get evszam() { // getter az évszám mezőhöz
         return this.#evszam; // visszaadja a privát évszám értékét
     }
 
     /**
-     * @returns {boolean} - a forradalom sikeressége
+     * @returns {string} - a forradalom sikeressége
      */
     get sikeres() { // getter a sikeresség mezőhöz
         return this.#sikeres; // visszaadja a privát sikeres értékét
@@ -26,8 +35,8 @@ class Adat { // egy Adat nevű osztályt definiálunk, ez reprezentál egy adatb
 
     /**
      * @param {string} forradalom - a forradalom neve
-     * @param {number} evszam - a forradalom évszáma
-     * @param {boolean} sikeres - a forradalom sikeressége
+     * @param {string} evszam - a forradalom évszáma
+     * @param {string} sikeres - a forradalom sikeressége
      */
     constructor(forradalom, evszam, sikeres) { // konstruktor, ami létrehoz egy új példányt
         this.#forradalom = forradalom; // beállítja a privát forradalom értéket

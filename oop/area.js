@@ -91,7 +91,7 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
         }
         
     /**
-     * @param {object} adat az adott sor adatai
+     * @param {Adat} adat az adott sor adatai
      * @param {string} tbody a táblázat tbody eleme
      */
     #adatSorra(adat, tbody){ // ezt hívjuk meg akkor amikor egy sort szeretnenk a tablazatunkba adatokkal
@@ -147,7 +147,7 @@ class Form extends Area {
 
     /**
      * @param {string} cssClass a formhoz tartozó CSS osztály
-     * @param {FormField[]} fieldsList a mezők listája
+     * @param {{fieldid:string,fieldLabel:string}[]} fieldsList a mezők listája
      * @param {Manager} manager a manager objektum
      */
     constructor(cssClass, fieldsList, manager) { // konstruktor, ami beállítja a form alapvető tulajdonságait
@@ -158,7 +158,7 @@ class Form extends Area {
     }
 
     /**
-     * @param {FormField[]} fieldsList a mezők listája
+     * @param {{fieldid:string,fieldLabel:string}[]} fieldsList a mezők listája
      * @returns {HTMLElement} a létrehozott form elem
      */ 
     #createForm(fieldsList) { // létrehoz egy form HTML elemet a mezőkkel és a gombbal
@@ -188,7 +188,7 @@ class Form extends Area {
     }
 
     /**
-     * @returns {void} az event listener függvény
+     * @returns {EventListener} az event listener függvény
      */
     #formSubmitEventListener() { // létrehoz egy event listener-t a form submit eseményére
         return (e) => { // esemenykezelő a form elküldéséhez
@@ -248,7 +248,7 @@ class UploadDownload extends Area { // létrehozunk egy UploadDownload nevű osz
         exportButton.addEventListener('click', this.#exportGombEventlistener()); // eseménykezelő a letöltés gombhoz
     }
     /** 
-     * @returns {void}
+     * @returns {EventListener}
      */
     #exportGombEventlistener() { // privát metódus a letöltési eseményhez
         return () => { // visszatérés

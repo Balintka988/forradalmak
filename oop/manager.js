@@ -59,7 +59,7 @@ class Manager { // egy Manager nevű osztály, kezeli az adatokat
     }
 
     /**
-    * @param {Function} callback - a callback függvény amely meghatározza a szűrési feltételt
+    * @param {function(Adat):boolean} callback - a callback függvény amely meghatározza a szűrési feltételt
     */
     filter(callback) { // alkalmaz egy szűrési feltételt az adattömbre és meghívja a táblázat újrarenderelési függvényt
         const eredmeny = []; // létrehoz egy üres tömböt a szurt adatok tárolására
