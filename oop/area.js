@@ -1,6 +1,11 @@
 class Area {//létrehozunk egy osztályt
+    /**
+     * @type {HTMLElement}
+     */
     #div;// privét változó, osztályon belül látható csak
-
+    /**
+     * @type {Manager}
+     */
     #manager;// privat változó, osztályon belül látható csak
 
     /**
@@ -294,9 +299,21 @@ class UploadDownload extends Area { // létrehozunk egy UploadDownload nevű osz
 
 
 class FormField { // létrehozunk egy FormField nevű osztályt
+    /**
+     * @type {string}
+     */
     #id; // privát változó azonosító tárolására
+    /**
+     * @type {HTMLElement}
+     */
     #inputMezo; // privát változó az input vagy select mezőhöz
+    /**
+     * @type {HTMLElement}
+     */
     #feliratElem; // privát változó a label (felirat) elemhez
+    /**
+     * @type {HTMLElement}
+     */
     #hibaElem; // privát változó a hibaüzenethez használt span elemhez
 
     /** 
