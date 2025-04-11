@@ -53,15 +53,7 @@ class Area {//létrehozunk egy osztályt
         return gomb; // visszaadja az elkészített gombot
     }
 }
-/**
- * @callback RenderTableCallback
- * @param {HTMLElement} tbody
- * @returns {void}
- * 
- * @callback addAdatCallback
- *  @param {HTMLElement} tbody megkapja a tbody-t
- * @returns {void}
- */
+
 class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Area ősosztályból öröklődik
     /**
      * @param {string} cssClass - amit kreálni szeretnénk pl 'table'
@@ -77,7 +69,7 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
     }
         /**
          * @param {HTMLElement} tbody megkapja a tbody-t
-         * @returns {void}
+         * @returns {RenderTableCallback}
          */
         #renderTableCallback(tbody) { // táblázat újrarenderelése
             return (array) => { // visszaad egy callback függvényt, ami újrarendereli a táblázatot
@@ -90,7 +82,7 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
         
         /**
          * @param {HTMLElement} tbody megkapja a tbody-t
-         * @returns {void}
+         * @returns {addAdatCallback}
          */
         #addAdatCallback(tbody) { // új adat hozzáadása a táblázathoz
             return(adat) => { // visszaad egy callback függvényt, ami egy új sort ad a táblázathoz
@@ -148,11 +140,14 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
 }
 
 class Form extends Area {
+    /**
+     * @type {formField[]}
+     */
     #inputTomb; // privát változó, ebbe gyűjtjük az összes FormField objektumot
 
     /**
      * @param {string} cssClass a formhoz tartozó CSS osztály
-     * @param {fieldsList[]} fieldsList a mezők listája
+     * @param {formField[]} fieldsList a mezők listája
      * @param {Manager} manager a manager objektum
      */
     constructor(cssClass, fieldsList, manager) { // konstruktor, ami beállítja a form alapvető tulajdonságait
@@ -163,7 +158,7 @@ class Form extends Area {
     }
 
     /**
-     * @param {fieldsList[]} fieldsList a mezők listája
+     * @param {formField[]} fieldsList a mezők listája
      * @returns {HTMLElement} a létrehozott form elem
      */ 
     #createForm(fieldsList) { // létrehoz egy form HTML elemet a mezőkkel és a gombbal
@@ -222,14 +217,14 @@ class Form extends Area {
     }
 
     /**
-     * @returns {Object} a mezők értékeit tartalmazó objektum
+     * @returns {{forradalom:string, evszam: string, sikeres:string}} a mezők értékeit tartalmazó objektum
      */
     #getValueObject() { // összegyűjti a mezők értékeit egy objektumba
         const valueObject = {}; // létrehozunk egy üres objektumot
         for (const formField of this.#inputTomb) { // végigmegyünk az összes mezőn
             valueObject[formField.id] = formField.value; // hozzárendeljük az értékeket az objektumhoz
         }
-        return valueObject; // visszaadjuk az objektumot
+        return valueObject; // visszaadjuk az objektumotí
     }
 }
 
@@ -267,7 +262,7 @@ class UploadDownload extends Area { // létrehozunk egy UploadDownload nevű osz
         };
     }
     /** 
-     * @returns {void} a fájl feltöltés eseménykezelője
+     * @returns {EventListener} a fájl feltöltés eseménykezelője
      */
     #importInputEventListener() { // privát metódus a fájl feltöltési eseményhez
         return (e) => { // esemenykezelő a fajl feltöltéséhez

@@ -9,10 +9,9 @@ const makeDiv = (className) => { // csinál egy olyan divet amit a függvény h�
 }
 
 /**
- * @param {Array} adatokArray - A bemeneti tömb, amin végrehajtjuk a szűrést.
- * @param {Function} callback - Egy függvény, amely minden elemre lefut. 
+ * @param {valueObject[]} adatokArray - A bemeneti tömb, amin végrehajtjuk a szűrést.
+ * @param {function(valueObject):boolean} callback - Egy függvény, amely minden elemre lefut. 
  *                               Ha true értéket ad vissza, az elem bekerül az eredménybe.
- * @returns {Array} Egy új tömb, amely csak a callback szerint megfelelő elemeket tartalmazza.
  */
 const filter = (adatokArray, callback) => { // Létrehozunk egy saját filter függvényt, ami egy tömböt és egy szűrőfüggvényt (callback) vár
     const eredmeny = []; // Ebbe a tömbbe fogjuk gyűjteni a szűrésnek megfelelő elemeket
@@ -25,8 +24,8 @@ const filter = (adatokArray, callback) => { // Létrehozunk egy saját filter f�
 }
 
 /**
+ * @param {function(HTMLElement):void} callback
  * @param {HTMLElement} containerDiv - az a div, amelybe a táblázatot helyezzük
- * @returns {void} - egy függvény amely a táblázat törzsével (tbody) dolgozik
  */
 const tablaKrealas = (containerDiv, callback) => { // letrehoz egy táblázatot a megadott containerDiv-ben és visszaadja a tbody-t a callback függvényen keresztul, a fuggvény végén
     const tableDiv = makeDiv('table'); // csinál egy table nevű divet
@@ -56,7 +55,7 @@ const tablaKrealas = (containerDiv, callback) => { // letrehoz egy táblázatot 
 /**
  * @param {HTMLElement} tbody - a táblázat törzse amelyhez az adatokat hozzáadjuk
  * @param {HTMLElement} containerDiv - a div amelybe az inputot és a fájl feltöltés gombot helyezzük
- * @param {Array} array - a tömb amely tárolja az adatokat
+ * @param {Forradalom[]} array - a tömb amely tárolja az adatokat
  */
 const fajlFeltoltes = (tbody, containerDiv, array) => { // betölti az adatokat fajlból, és hozzáadja őket a táblázat törzséhez (tbody)
     const fileUploadInput = document.createElement('input'); // létrehozunk egy input elemet hogy fájlt lehessen választani
@@ -105,7 +104,7 @@ const fajlFeltoltes = (tbody, containerDiv, array) => { // betölti az adatokat 
 /**
 * @param {HTMLElement} tbody - a táblázat törzse ahová az új sorokat hozzáadjuk
 * @param {HTMLElement} containerDiv - a konténer amely a formot tárolja
-* @param {Array} array - a táblázat adatainak tömbje amibe új adatokat adunk
+* @param {Forradalom[]} array - a táblázat adatainak tömbje amibe új adatokat adunk
 */
 const createForm = (tbody, containerDiv, array) => { // letrehoz egy űrlapot amely lehetővé teszi új adatok hozzáadását a táblázathoz
     const formDiv = makeDiv('form'); // form divet is csinálunk
@@ -209,7 +208,7 @@ const createForm = (tbody, containerDiv, array) => { // letrehoz egy űrlapot am
 /**
  * hozzaad egy új sort a táblázathoz a megadott adatok alapján
  *
- * @param {Object} valueObject - az új sor adatai (forradalom, évszám, sikeresség)
+ * @param {Forradalom} valueObject - az új sor adatai (forradalom, évszám, sikeresség)
  * @param {HTMLElement} tbody - a táblázat törzse ahová a sort hozzáadjuk
  */
 const sorHozzaadas = (valueObject, tbody) => { // a függvény amely hozzáadja az új sort a tablázat torzséhez a kapott adatok alapján
@@ -266,7 +265,7 @@ const fajlLetoltes = (containerDiv, array) => { // a kreált táblázatot ez ál
  *
  * @param {HTMLElement} containerDiv - a konténer amely a szűrési formot tárolja
  * @param {HTMLElement} tbody - a táblázat törzse amit szűrni szeretnénk
- * @param {Array} array - a táblázat adatait tartalmazó tömb
+ * @param {Forradalom[]} array - a táblázat adatait tartalmazó tömb
  */
 const formSzures = (containerDiv, tbody, array) => { // // Itt hozzuk létre a szűrőfelületet az adatok szűréséhez
     const filterFormDiv = makeDiv('filterForm'); // létrehozunk egy divet a szűrési űrlapnak

@@ -1,6 +1,24 @@
+/**
+ * @callback RenderTableCallback
+ * @param {HTMLElement} tbody
+ * @returns {void}
+ * 
+ * @callback addAdatCallback
+ *  @param {HTMLElement} tbody megkapja a tbody-t
+ * @returns {void}
+ */
 class Manager { // egy Manager nevű osztály, kezeli az adatokat
+    /**
+     * @type {Adat[]}
+     */
     #array; // privát tömb, amiben az Adat objektumokat tároljuk
+    /**
+     * @type {addAdatCallback}
+     */
     #addAdatCallback; // privát callback függvény, amit meghívunk új adat hozzáadásánál
+    /**
+     * @type {RenderTableCallback}
+     */
     #renderTableCallback; // ez a függvény kerül meghívásra amikor a tablázatot újra kell renderelni peldaiul szures után
 
     constructor() { // konstruktor, ami létrehozza az objektumot
