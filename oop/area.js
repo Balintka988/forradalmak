@@ -141,13 +141,13 @@ class Table extends Area { // létrehozunk egy Table nevű osztályt, ami az Are
 
 class Form extends Area {
     /**
-     * @type {formField[]}
+     * @type {FormField[]}
      */
     #inputTomb; // privát változó, ebbe gyűjtjük az összes FormField objektumot
 
     /**
      * @param {string} cssClass a formhoz tartozó CSS osztály
-     * @param {formField[]} fieldsList a mezők listája
+     * @param {FormField[]} fieldsList a mezők listája
      * @param {Manager} manager a manager objektum
      */
     constructor(cssClass, fieldsList, manager) { // konstruktor, ami beállítja a form alapvető tulajdonságait
@@ -158,7 +158,7 @@ class Form extends Area {
     }
 
     /**
-     * @param {formField[]} fieldsList a mezők listája
+     * @param {FormField[]} fieldsList a mezők listája
      * @returns {HTMLElement} a létrehozott form elem
      */ 
     #createForm(fieldsList) { // létrehoz egy form HTML elemet a mezőkkel és a gombbal
