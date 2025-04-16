@@ -304,7 +304,7 @@ class FormField { // létrehozunk egy FormField nevű osztályt
      */
     #id; // privát változó azonosító tárolására
     /**
-     * @type {HTMLElement}
+     * @type {HTMLInputElement}
      */
     #inputMezo; // privát változó az input vagy select mezőhöz
     /**
@@ -312,7 +312,7 @@ class FormField { // létrehozunk egy FormField nevű osztályt
      */
     #feliratElem; // privát változó a label (felirat) elemhez
     /**
-     * @type {HTMLElement}
+     * @type {HTMLSpanElement}
      */
     #hibaElem; // privát változó a hibaüzenethez használt span elemhez
 

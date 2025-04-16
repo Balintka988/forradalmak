@@ -211,10 +211,10 @@ const createForm = (tbody, containerDiv, array) => { // letrehoz egy űrlapot am
  * @param {Forradalom} valueObject - az új sor adatai (forradalom, évszám, sikeresség)
  * @param {HTMLElement} tbody - a táblázat törzse ahová a sort hozzáadjuk
  */
-const sorHozzaadas = (valueObject, tbody) => { // a függvény amely hozzáadja az új sort a tablázat torzséhez a kapott adatok alapján
+const sorHozzaadas = (valueObject, tbodY) => { // a függvény amely hozzáadja az új sort a tablázat torzséhez a kapott adatok alapján
     const tbRow = document.createElement('tr'); // csinálunk egy új sort a táblába
-    tbody.appendChild(tbRow); // belerakjuk a tbody-be
-
+    tbodY.appendChild(tbRow); // belerakjuk a tbody-be
+    
     const forradalomCell = document.createElement('td'); // forradalom nak létrehozunk egy cellát
     forradalomCell.textContent = valueObject.forradalom; // cella szövegébe a forradalom
     tbRow.appendChild(forradalomCell); // hozzáadjuk a sorhoz
@@ -311,22 +311,35 @@ const formSzures = (containerDiv, tbody, array) => { // // Itt hozzuk létre a s
     button.innerText = 'Szűrés'; // beállítjuk a szöveget
     formForSzures.appendChild(button); // hozzáadjuk a formhoz
     
+
     formForSzures.addEventListener('submit', (e) => { // eseményfigyelő a form submit eseményére
-        e.preventDefault(); // ne töltse újra az oldalt
-    
-        const filterInput = e.target.querySelector('#filterInput'); // lekérjük az input mezőt
-        const select = e.target.querySelector('select'); // lekérjük a legördülőt
-    
-        const szurtArray = filter(array, (element) => { // saját filter függvényt használunk, amit legfelül hoztunk létre
-            const mezo = select.value; // kiválasztott mező
-            if (mezo === '') return true; // ha nincs kiválasztva semmi, akkor ne szűrjön
-            return element[mezo] === filterInput.value; // csak azokat adja vissza, ahol egyezik az érték
+        e.preventDefault(); // megakadályozza, hogy az oldal újratöltődjön
+        const filterInput = e.target.querySelector('#filterInput'); // megkeresi a beviteli inputot
+        const select = e.target.querySelector('select'); // megkeresi a kiválasztó mezőt
+        let tomB = []; // létrehoz egy üres arrayt
+           
+        const filteredArray = filter(array, (element) => { // szűrési függvény hívása a feltételekkel
+            if(select.value == 'forradalom'){ // ha a választott érték forradalom
+                if(filterInput.value === element.forradalom){ // ha a szűrési bemenet egyezik az elemmel
+                    return true; // az elemet visszaadja
+                }
+            }else if(select.value == 'evszam'){ // ha a választott érték evszam
+                if(filterInput.value === element.evszam){ // ha a szűrési bemenet egyezik az évszámmal
+                    return true; // az elemet visszaadja
+                }
+            }else if(select.value == 'sikeres'){ // ha a választott érték sikeres
+                if(filterInput.value === element.sikeres){ // ha a szűrési bemenet egyezik a sikerességgel
+                    return true; // az elemet visszaadja
+                }
+            }
         });
-    
-        tbody.innerHTML = ''; // kiürítjük a jelenlegi táblázatot
-    
-        for (const adat of szurtArray) { // újra létrehozzuk a már szűrt sorokat
-            sorHozzaadas(adat, tbody); // Új adatot ad a táblázathoz egy új sor formájában
+            
+        for (const forradalom of filteredArray) { // végigiterál a szűrt forradalom tömbön
+            tomB.push(forradalom); // hozzáadja az aktuális elemet
         }
+        const resultText = document.createElement("div"); // létrehoz egy divet az eredménynek, hogy megjelenítse
+        formForSzures.appendChild(resultText); // hozzáadja a divot az elemhez
+           
+        resultText.innerHTML = `A szűrésnek megfelelő cucC: ${tomB.length}`; // kiírja az eredményeket szöveggel
     });
 }
