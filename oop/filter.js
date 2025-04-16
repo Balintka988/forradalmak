@@ -34,18 +34,14 @@ class FilterForm extends Area { // a FilterForm osztályunk az Area ősosztályb
         button.innerText = 'Szűrés'; // beállítja a gomb szövegét
         form.appendChild(button); // hozzáadja a gombot a formhoz
 
-        form.addEventListener('submit', (e) => { // eseményfigyelő hozzáadása a formhoz
-            e.preventDefault(); // alapértelmezett form viselkedés tiltása (oldal újratöltés)
-
-            const filterInput = e.target.querySelector('#filterInput'); // lekéri az input mezőt
-            const selectedOption = e.target.querySelector('select').value; // lekéri a kiválasztott opciót a legördülőből
-
-            this.manager.filter((element) => { // szűrési logika alkalmazása a manager objektumon keresztül
-                if (selectedOption === '') { // ellenőrzi, hogy nincs-e kiválasztva opció
-                    return true; // ha nincs kiválasztva semmi, ne szűrjön
-                }
-                return element[selectedOption] === filterInput.value; // szűrés az input értéke alapján történik
-            });
+        const divElem = document.createElement('div'); // létrehoz egy új div elemet
+        form.appendChild(divElem); // hozzáadja a div elemet a formhoz
+            
+        form.addEventListener('submit', (e) => { // eseményfigyelőt ad a form submit eseményéhez
+            e.preventDefault(); // megakadályozza az oldal alapértelmezett újratöltését
+            const szamlalo = manager.szamlalo(select.value, input.value); // meghívja a manager szamlalo függvényét a select és input értékekkel
+            divElem.innerHTML = `A szűrésnek megfelelő dolgok száma: ${szamlalo}`; // beállítja a div elem tartalmát a szűrés eredményének megjelenítésére
         });
+
     }
 }

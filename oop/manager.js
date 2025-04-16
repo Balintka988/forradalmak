@@ -70,4 +70,20 @@ class Manager { // egy Manager nevű osztály, kezeli az adatokat
         }
         this.#renderTableCallback(eredmeny); // meghívja a táblázat újrarenderelési függvényt a szurt adatokkal
     }
+
+    /**
+     * @param {"forradalom"; "evszam"; "sikeres"} adatTipus ezt kapja a filter.js-ből, ez a selectnek a value-ja
+     * @param {string} value a string amit össze kell hasonlítanunk
+     * @returns {Number} egy számot kapunk amit a filter.js-ben iratunk ki
+     */
+    szamlalo(adatTipus, value) { // függvény amely megszámolja az adott típusú és értékű elemeket a tömbben
+        let szamol = 0; // változó az elemek számolásához
+        for (const adat of this.#array) { // végigiterál a privát tömb összes elemén
+            if (adat[adatTipus] === value) { // ellenőrzi, hogy a tömb eleme megfelel-e az adott típusnak és értéknek
+                szamol++; // növeli a számlálót, ha a feltétel teljesül
+            }
+        }
+        return szamol; // visszaadja a megszámolt elemek számát
+    }
+    
 }
